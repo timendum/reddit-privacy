@@ -1,10 +1,15 @@
 from datetime import datetime, timedelta
 import praw
+import logging
+
+logger = logging.getLogger(__package__)
+logger.setLevel(logging.NOTSET)
+logger.addHandler(logging.StreamHandler())
 
 REDDIT_HARDLIMIT = 1000 - 1
 
 def main(days_limit=365, number_limit=None):
-	r = praw.Reddit(user_agent='python:reddit-privacy-delete:0.1 (by /u/timendum')
+	r = praw.Reddit(user_agent='python:reddit-privacy-delete:0.1 (by /u/timendum)')
 	r.login(disable_warning=True)
 	user = r.user
 	# Limits
@@ -14,12 +19,11 @@ def main(days_limit=365, number_limit=None):
 		number_limit = REDDIT_HARDLIMIT
 	created_limit = datetime.now() - timedelta(days=days_limit)
 	print('Criteria: user %s\'s submissions and comments older then %s days OR then the %dth content' % (user.name, created_limit.isoformat(), number_limit))
-	return 
 	# Submission
-	submitted = user.get_submitted(sort='new', limit=REDDIT_HARDLIMIT)
+	submitted = user.get_submitted(sort='new', limit=None)
 	check(submitted, number_limit, created_limit)
 	# Comments
-	comments = user.get_comments(sort='new', limit=REDDIT_HARDLIMIT)
+	comments = user.get_comments(sort='new', limit=None)
 	check(comments, number_limit, created_limit)
 
 def check(contents, number_limit, created_limit):
