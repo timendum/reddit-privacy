@@ -1,3 +1,5 @@
 [DEFAULT]
-user: USERNAME
-pswd: PASSWORD
+username: USERNAME
+password: PASSWORD
+client_id: xxxxxxxxxxxxxx
+client_secret: xxxxxxxxxxxxxxxxxxxx
