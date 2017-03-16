@@ -3,7 +3,7 @@ import praw
 import logging
 
 logger = logging.getLogger(__package__)
-logger.setLevel(logging.NOTSET)
+logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
 REDDIT_HARDLIMIT = 1000 - 1
@@ -20,12 +20,11 @@ def main(days_limit=365, number_limit=None):
 	print('Criteria: user %s\'s submissions and comments older then %s days OR then the %dth content' % (user.name, created_limit.isoformat(), number_limit))
 	# Submission
 	submitted = user.submissions.new(limit=None)
-	check(submitted, number_limit, created_limit)
-	# Comments
+	check(submitted, number_limit, created_limit, False)
 	comments = user.comments.new(limit=None)
-	check(comments, number_limit, created_limit)
+	check(comments, number_limit, created_limit, True)
 
-def check(contents, number_limit, created_limit):
+def check(contents, number_limit, created_limit, delete=False):
 	count = 0
 	to_delete = []
 	for e in contents:
@@ -44,7 +43,8 @@ def check(contents, number_limit, created_limit):
 			print('Deleting ' + e.permalink)
 		except TypeError:
 			print('Deleting ' + e.permalink(fast=True))
-		e.delete()
+		if delete:
+			e.delete()
 
 if __name__ == "__main__":
 	import sys
