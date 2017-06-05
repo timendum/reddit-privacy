@@ -17,10 +17,10 @@ def main(days_limit=365, number_limit=None):
 	elif number_limit is None:
 		number_limit = REDDIT_HARDLIMIT
 	created_limit = datetime.now() - timedelta(days=days_limit)
-	print('Criteria: user %s\'s submissions and comments older then %s days OR then the %dth content' % (user.name, created_limit.isoformat(), number_limit))
+	print('Criteria: user %s\'s submissions and comments older then %s OR then the %dth content' % (user.name, created_limit.isoformat(), number_limit))
 	# Submission
 	submitted = user.submissions.new(limit=None)
-	check(submitted, number_limit, created_limit, False)
+	check(submitted, number_limit, created_limit, True)
 	comments = user.comments.new(limit=None)
 	check(comments, number_limit, created_limit, True)
 
@@ -39,10 +39,13 @@ def check(contents, number_limit, created_limit, delete=False):
 			continue
 		count += 1
 	for e in to_delete:
+		if e.saved:
+			print('Saved ' + e.permalink)
+			continue
 		try:
 			print('Deleting ' + e.permalink)
 		except TypeError:
-			print('Deleting ' + e.permalink(fast=True))
+			print('Deleting ' + e.link_permalink + e.id)
 		if delete:
 			e.delete()
 
