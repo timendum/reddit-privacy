@@ -61,4 +61,4 @@ To delete **everythying**:
 
 To delete anything more than 90 days old:
 
-    $ python delete.py 00
+    $ python delete.py 90
