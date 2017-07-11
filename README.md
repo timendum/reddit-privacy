@@ -16,8 +16,7 @@ Copy `PRAW.ini.template` to `PRAW.ini` and add your username and password
 ## Client Key (Reddit API Key)
 
 First, you will need to create a [reddit app](https://www.reddit.com/prefs/apps/).
-Don't worry, it's not nearly as complicated as it sounds.
-[Follow this link to create reddit app](https://www.reddit.com/prefs/apps/),
+[Go to Reddit](https://www.reddit.com/prefs/apps/) to create reddit app,
 then click "create app" (or it might say "create another app...").
 
 You can name it whatever then select "script". You can enter whatever you want
@@ -51,7 +50,7 @@ You can pass _days_ and _number_ arguments, to change the limits of the script,
 by default it delete submissions and comments older than 183 days (~6 months)
 and older content if you have more than 900 on history.
 
-#### Windows bash (Window 7 using git's built in bash shell)
+#### Examples
 
     $ python delete.py
 
