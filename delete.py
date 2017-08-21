@@ -1,3 +1,4 @@
+import argparse
 from datetime import datetime, timedelta
 import praw
 import logging
@@ -8,8 +9,8 @@ logger.addHandler(logging.StreamHandler())
 
 REDDIT_HARDLIMIT = 1000 - 1
 
-def main(days_limit=365, number_limit=None):
-	r = praw.Reddit(user_agent='python:reddit-privacy-delete:0.2 (by /u/timendum)')
+def main(days_limit=365, number_limit=None, test=True):
+	r = praw.Reddit(user_agent='python:reddit-privacy-delete:0.3 (by /u/timendum)')
 	user = r.user.me()
 	# Limits
 	if number_limit is not None and number_limit > REDDIT_HARDLIMIT:
@@ -17,13 +18,19 @@ def main(days_limit=365, number_limit=None):
 	elif number_limit is None:
 		number_limit = REDDIT_HARDLIMIT
 	created_limit = datetime.now() - timedelta(days=days_limit)
-    print(
-        'Deleting {}\'s submissions and comments made after {} OR older than their {}th post'.format(
-            user.name, created_limit.date(), number_limit))	# Submission
+	if test:
+		print('Printing', end='')
+	else:
+		print('Deleting', end='')
+	print(
+		' {}\'s submissions and comments made before {} OR older than the {}th contet'.format(
+			user.name, created_limit.date(), number_limit))
+	# Submission
 	submitted = user.submissions.new(limit=None)
-	check(submitted, number_limit, created_limit, True)
+	check(submitted, number_limit, created_limit, test)
+	# Comments
 	comments = user.comments.new(limit=None)
-	check(comments, number_limit, created_limit, True)
+	check(comments, number_limit, created_limit, test)
 
 def check(contents, number_limit, created_limit, delete=False):
 	count = 0
@@ -51,16 +58,22 @@ def check(contents, number_limit, created_limit, delete=False):
 			e.delete()
 
 if __name__ == "__main__":
-	import sys
-	argv = sys.argv
-
-	if len(argv) > 0 and argv[0] == __file__:
-		argv = argv[1:]
-
-	days_limit = 366/2
-	if len(argv) > 0:
-		days_limit = int(argv[0])
-	number_limit = 900
-	if len(argv) > 1:
-		number_limit = int(argv[1])
-	main(days_limit, number_limit)
+    parser = argparse.ArgumentParser(
+        description='Remove posts and comments from Reddit.')
+    parser.add_argument('days_limit',
+                        metavar='DAYS',
+                        type=int,
+                        nargs='?',
+                        default=366 / 2,
+                        help='Content older than D days will be deleted')
+    parser.add_argument('number_limit',
+                        metavar='NUM',
+                        type=int,
+                        nargs='?',
+                        default=900,
+                        help='Content older than N-th will be deleted')
+    parser.add_argument("-t", "--test",
+                        action="store_true",
+                        help="Don't delete, perform a test")
+	args = parser.parse_args()
+	main(args.days_limit, args.number_limit, args.test)

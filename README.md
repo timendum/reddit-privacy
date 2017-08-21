@@ -44,11 +44,14 @@ to prevent them to be used for profilation or snooping.
 Launch the script, by default your credential will be fetched from `PRAW.ini`
 or will be asked on the prompt.
 
-    python delete.py [days [number]]
+    python delete.py -t [days [number]]
 
 You can pass _days_ and _number_ arguments, to change the limits of the script,
 by default it delete submissions and comments older than 183 days (~6 months)
 and older content if you have more than 900 on history.
+
+The _-t_ option perform a test: the programm will only write what would be deleted
+but it will not peform the remove.
 
 #### Examples
 
