@@ -17,8 +17,9 @@ def main(days_limit=365, number_limit=None):
 	elif number_limit is None:
 		number_limit = REDDIT_HARDLIMIT
 	created_limit = datetime.now() - timedelta(days=days_limit)
-	print(f'Deleting {user.name}\'s submissions and comments made after {created_limit.date()} OR older than their {number_limit}th post')
-	# Submission
+    print(
+        'Deleting {}\'s submissions and comments made after {} OR older than their {}th post'.format(
+            user.name, created_limit.date(), number_limit))	# Submission
 	submitted = user.submissions.new(limit=None)
 	check(submitted, number_limit, created_limit, True)
 	comments = user.comments.new(limit=None)
