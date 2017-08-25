@@ -1,7 +1,8 @@
 import argparse
 from datetime import datetime, timedelta
-import praw
+from operator import attrgetter
 import logging
+import praw
 
 logger = logging.getLogger(__package__)
 logger.setLevel(logging.INFO)
@@ -30,14 +31,15 @@ def main(days_limit=365, number_limit=None, test=True):
     submitted = submitted | set(user.submissions.new(limit=None))
     submitted = submitted | set(user.submissions.top(limit=None))
     submitted = submitted | set(user.submissions.controversial(limit=None))
+    submitted = sorted(submitted, key=attrgetter('created'), reverse=True)
     check(submitted, number_limit, created_limit, test)
     # Comments
     comments = set(user.comments.hot(limit=None))
     comments = comments | set(user.comments.new(limit=None))
     comments = comments | set(user.comments.top(limit=None))
     comments = comments | set(user.comments.controversial(limit=None))
+    comments = sorted(comments, key=attrgetter('created'), reverse=True)
     check(comments, number_limit, created_limit, test)
-    
 
 def check(contents, number_limit, created_limit, delete=False):
     count = 0
