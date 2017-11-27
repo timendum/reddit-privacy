@@ -41,7 +41,7 @@ def main(days_limit=365, number_limit=None, test=True):
     comments = sorted(comments, key=attrgetter('created'), reverse=True)
     check(comments, number_limit, created_limit, test)
 
-def check(contents, number_limit, created_limit, delete=False):
+def check(contents, number_limit, created_limit, test=True):
     count = 0
     to_delete = []
     for e in contents:
@@ -63,7 +63,7 @@ def check(contents, number_limit, created_limit, delete=False):
             print('Deleting ' + e.permalink)
         except TypeError:
             print('Deleting ' + e.link_permalink + e.id)
-        if delete:
+        if not test:
             e.delete()
 
 if __name__ == "__main__":
