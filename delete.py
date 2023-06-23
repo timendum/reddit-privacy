@@ -45,6 +45,20 @@ def check(contents, number_limit, created_limit, test=True):
     count = 0
     to_delete = []
     for e in contents:
+        try:
+            # Reddit won't delete poll post belonging to a prediction tournament
+            if e.poll_data:
+                print('Skipped ' + e.permalink)
+                continue
+        except AttributeError:
+            pass
+        try:
+            # Reddit won't delete prediction tournament post
+            if e.tournament_data:
+                print('Skipped ' + e.permalink)
+                continue
+        except AttributeError:
+            pass
         time = e.created
         submitted = datetime.fromtimestamp(time)
         if submitted < created_limit:
