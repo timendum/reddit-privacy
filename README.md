@@ -6,10 +6,7 @@ Clone the repository
 
     git clone https://github.com/timendum/reddit-privacy.git
 
-Create a Python virtual env and install the requirements
-
-    virtualenv reddit-privacy
-    pip install -r requirements.txt
+Make sure `uv` is installed on your system.
 
 Copy `PRAW.ini.template` to `PRAW.ini` and add your username and password
 
@@ -44,7 +41,7 @@ to prevent them to be used for profilation or snooping.
 Launch the script, by default your credential will be fetched from `PRAW.ini`
 or will be asked on the prompt.
 
-    python delete.py -t [days [number]]
+    uv run delete.py -t [days [number]]
 
 You can pass _days_ and _number_ arguments, to change the limits of the script,
 by default it delete submissions and comments older than 183 days (~6 months)
